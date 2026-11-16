@@ -10,7 +10,9 @@ public class ConexionView extends JFrame {
     private JTextField txtUrl;
     private JTextField txtUsuario;
     private JPasswordField txtContrasena;
+
     private JButton btnProbarConexion;
+
     private JTextArea txtResultado;
 
     // Constructor de la ventana
@@ -23,13 +25,16 @@ public class ConexionView extends JFrame {
 
         // Panel principal
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
-        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBorder(
+                new EmptyBorder(20, 20, 20, 20)
+        );
 
         // Título
         JLabel lblTitulo = new JLabel(
                 "Configuración de conexión a base de datos",
                 SwingConstants.CENTER
         );
+
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 17));
 
         panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
@@ -40,68 +45,103 @@ public class ConexionView extends JFrame {
         );
 
         panelCampos.add(new JLabel("URL de conexión:"));
+
         txtUrl = new JTextField("jdbc:sqlite:inventario.db");
         panelCampos.add(txtUrl);
 
         panelCampos.add(new JLabel("Usuario:"));
+
         txtUsuario = new JTextField();
         panelCampos.add(txtUsuario);
 
         panelCampos.add(new JLabel("Contraseña:"));
+
         txtContrasena = new JPasswordField();
         panelCampos.add(txtContrasena);
 
         // Panel central
-        JPanel panelCentral = new JPanel(new BorderLayout(10, 15));
+        JPanel panelCentral = new JPanel(
+                new BorderLayout(10, 15)
+        );
+
         panelCentral.add(panelCampos, BorderLayout.NORTH);
 
         // Botón de conexión
         btnProbarConexion = new JButton("Probar conexión");
-        panelCentral.add(btnProbarConexion, BorderLayout.CENTER);
+
+        JPanel panelBoton = new JPanel(
+                new FlowLayout(FlowLayout.CENTER)
+        );
+
+        panelBoton.add(btnProbarConexion);
+
+        panelCentral.add(panelBoton, BorderLayout.CENTER);
 
         // Área de resultados
         txtResultado = new JTextArea(6, 30);
         txtResultado.setEditable(false);
         txtResultado.setLineWrap(true);
         txtResultado.setWrapStyleWord(true);
+        txtResultado.setFont(
+                new Font("Monospaced", Font.PLAIN, 12)
+        );
 
-        JScrollPane scrollResultado = new JScrollPane(txtResultado);
+        JScrollPane scrollResultado = new JScrollPane(
+                txtResultado
+        );
 
-        JPanel panelResultado = new JPanel(new BorderLayout(5, 5));
+        // Panel de resultados
+        JPanel panelResultado = new JPanel(
+                new BorderLayout(5, 5)
+        );
+
         panelResultado.add(
                 new JLabel("Resultado de la conexión:"),
                 BorderLayout.NORTH
         );
-        panelResultado.add(scrollResultado, BorderLayout.CENTER);
+
+        panelResultado.add(
+                scrollResultado,
+                BorderLayout.CENTER
+        );
+
+        panelResultado.setPreferredSize(
+                new Dimension(500, 155)
+        );
 
         panelCentral.add(panelResultado, BorderLayout.SOUTH);
 
-        panelPrincipal.add(panelCentral, BorderLayout.CENTER);
-
-        // Agregar panel principal a la ventana
+        // Agregar panel central a la ventana
+        panelPrincipal.add(
+                panelCentral,
+                BorderLayout.CENTER
+        );
         add(panelPrincipal);
     }
 
-    // Métodos para acceder a los componentes
-
+    // Obtener URL
     public String getUrl() {
         return txtUrl.getText().trim();
     }
 
+    // Obtener usuario
     public String getUsuario() {
         return txtUsuario.getText().trim();
     }
 
+    // Obtener contraseña
     public char[] getContrasena() {
         return txtContrasena.getPassword();
     }
 
+    // Obtener botón
     public JButton getBtnProbarConexion() {
         return btnProbarConexion;
     }
 
-    // Mostrar resultados en pantalla
+    // Mostrar resultados
     public void mostrarResultado(String mensaje, Color color) {
+
         txtResultado.setForeground(color);
         txtResultado.setText(mensaje);
     }
