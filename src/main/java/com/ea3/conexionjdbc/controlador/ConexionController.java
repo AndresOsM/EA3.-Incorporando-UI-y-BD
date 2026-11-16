@@ -5,6 +5,7 @@ import com.ea3.conexionjdbc.vista.ConexionView;
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class ConexionController {
 
@@ -26,11 +27,16 @@ public class ConexionController {
     // Método para gestionar la prueba de conexión
     private void probarConexion() {
 
-        // Obtener la URL ingresada en la interfaz
+        // 1. Obtener los datos ingresados en la interfaz
         String url = vista.getUrl();
+        String usuario = vista.getUsuario();
 
-        // Validar que la URL no esté vacía
+        char[] passwordChars = vista.getContrasena();
+
+        // 2. Validar que la URL no esté vacía
         if (url.isEmpty()) {
+
+            Arrays.fill(passwordChars, '\0');
 
             vista.mostrarResultado(
                     "ERROR: La URL de conexión no puede estar vacía.",
@@ -40,32 +46,43 @@ public class ConexionController {
             return;
         }
 
-        // Intentar establecer la conexión
+        // 3. Convertir la contraseña para enviarla al modelo
+        String password = new String(passwordChars);
+
+        // Limpiar el arreglo original
+        Arrays.fill(passwordChars, '\0');
+
+        // 4. Intentar establecer la conexión
         try {
 
-            modelo.probarConexion(url);
+            String resultado = modelo.probarConexion(
+                    url,
+                    usuario,
+                    password
+            );
 
+            // Mostrar resultado exitoso
             vista.mostrarResultado(
-                    "CONEXIÓN EXITOSA\n\n" +
-                            "La conexión con la base de datos SQLite " +
-                            "se estableció correctamente.",
+                    "CONEXIÓN EXITOSA\n\n" + resultado,
                     new Color(0, 128, 0)
             );
 
         } catch (ClassNotFoundException e) {
 
+            // Error al encontrar el controlador JDBC
             vista.mostrarResultado(
-                    "ERROR: No se encontró el controlador JDBC.\n\n" +
-                            "Detalle técnico: " + e.getMessage(),
+                    "ERROR: No se encontró el controlador JDBC.\n\n"
+                            + "Detalle técnico: " + e.getMessage(),
                     Color.RED
             );
 
         } catch (SQLException e) {
 
+            // Error durante la conexión
             vista.mostrarResultado(
-                    "FALLO DE CONEXIÓN\n\n" +
-                            "No fue posible conectar con la base de datos.\n\n" +
-                            "Detalle técnico: " + e.getMessage(),
+                    "FALLO DE CONEXIÓN\n\n"
+                            + "No fue posible conectar con la base de datos.\n\n"
+                            + "Detalle técnico: " + e.getMessage(),
                     Color.RED
             );
         }
